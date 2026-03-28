@@ -1,0 +1,60 @@
+{% extends "patient_base.html" %}
+{% block title %}Respiratory Rate{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <a href="javascript:history.back()" style="color:var(--text); text-decoration:none; font-size:24px;">←</a>
+        <h3 style="font-weight:700;">Respiratory Rate</h3>
+    </div>
+    <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">Step 4 of 7</p>
+    <div style="height:6px; background:var(--border); border-radius:4px; overflow:hidden; margin-bottom:32px;">
+        <div style="height:100%; width:57%; background:var(--blue); border-radius:4px;"></div>
+    </div>
+
+    <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Count Your Breaths</h2>
+    <p style="color:var(--text2); font-size:14px; margin-bottom:24px;">Count your breaths for 30 seconds</p>
+
+    <div class="card" style="text-align:center;">
+        <div id="timerDisplay" style="font-size:64px; font-weight:800; color:var(--blue); margin:20px 0;">30</div>
+        <p id="timerLabel" style="color:var(--muted); margin-bottom:24px;">Tap count each time you breathe</p>
+        <div style="font-size:20px; color:var(--text2); margin-bottom:8px;">Breath Count</div>
+        <div id="breathCount" style="font-size:56px; font-weight:800; color:var(--green);">0</div>
+        <div class="btn-row" style="justify-content:center; gap:16px; margin-top:24px;">
+            <button class="btn btn-secondary" onclick="startTimer()" id="btnStart">▶ Start Timer</button>
+            <button class="btn btn-primary" onclick="countBreath()" id="btnCount" style="display:none;">+ Count
+                Breath</button>
+        </div>
+        <form method="POST" id="rrForm" style="margin-top:24px; display:none;">
+            {% csrf_token %}
+            <input type="hidden" name="respiratory_rate" id="rrInput">
+            <div style="font-size:18px; font-weight:700; color:var(--green); margin-bottom:16px;">
+                Your Rate: <span id="bpmDisplay">0</span> BPM
+            </div>
+            <button type="submit" class="btn btn-primary">Continue</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    let timer = 30, count = 0, interval;
+    function startTimer() {
+        document.getElementById('btnStart').style.display = 'none';
+        document.getElementById('btnCount').style.display = 'inline-flex';
+        interval = setInterval(() => {
+            timer--;
+            document.getElementById('timerDisplay').textContent = timer;
+            if (timer <= 0) { clearInterval(interval); finishCount(); }
+        }, 1000);
+    }
+    function countBreath() { count++; document.getElementById('breathCount').textContent = count; }
+    function finishCount() {
+        let bpm = count * 2;
+        document.getElementById('btnCount').style.display = 'none';
+        document.getElementById('rrForm').style.display = 'block';
+        document.getElementById('rrInput').value = bpm;
+        document.getElementById('bpmDisplay').textContent = bpm;
+        document.getElementById('timerLabel').textContent = 'Done!';
+    }
+</script>
+{% endblock %}

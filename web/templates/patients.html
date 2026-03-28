@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Patients{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>Patients</h2>
+    <p>All registered users and their clinical data</p>
+</div>
+
+<div class="table-card">
+    <div class="table-header">
+        <h3>All Patients</h3>
+        <span class="badge">{{ users|length }} total</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Condition</th>
+                <th>Smoking</th>
+                <th>Resp. Rate</th>
+                <th>SpO2</th>
+                <th>Dyspnea</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td style="color: var(--text-muted)">#{{ user.id }}</td>
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar" style="background: {{ user.avatar_color }}">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <div>
+                            <div style="font-weight: 600">{{ user.username }}</div>
+                            <div style="font-size: 12px; color: var(--text-muted)">{{ user.name }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ user.age|default:"-" }}</td>
+                <td>{{ user.gender|default:"-" }}</td>
+                <td>
+                    {% if user.condition %}
+                    <span class="tag tag-blue">{{ user.condition }}</span>
+                    {% else %}-{% endif %}
+                </td>
+                <td>
+                    {% if user.smoking_status %}
+                    <span
+                        class="tag {% if user.smoking_status == 'Never' %}tag-green{% elif user.smoking_status == 'Former' %}tag-orange{% else %}tag-red{% endif %}">
+                        {{ user.smoking_status }}
+                    </span>
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ user.respiratory_rate|default:"-" }} bpm</td>
+                <td>
+                    {% if user.spo2_level %}
+                    <span
+                        class="tag {% if user.spo2_level >= 95 %}tag-green{% elif user.spo2_level >= 90 %}tag-orange{% else %}tag-red{% endif %}">
+                        {{ user.spo2_level }}%
+                    </span>
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ user.dyspnea_score|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'web-patient-detail' user.id %}" class="btn btn-primary"
+                        style="padding: 6px 14px; font-size: 12px;">View Details</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" style="text-align: center; padding: 40px; color: var(--text-muted);">No patients
+                    registered yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

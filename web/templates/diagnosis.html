@@ -1,0 +1,68 @@
+{% extends "patient_base.html" %}
+{% block title %}Diagnosis{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <!-- Header like app -->
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <a href="javascript:history.back()" style="color:var(--text); text-decoration:none; font-size:24px;">←</a>
+        <h3 style="font-weight:700;">Diagnosis</h3>
+    </div>
+    <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">Step 2 of 7</p>
+
+    <!-- Progress bar -->
+    <div style="height:6px; background:var(--border); border-radius:4px; overflow:hidden; margin-bottom:32px;">
+        <div style="height:100%; width:28%; background:var(--blue); border-radius:4px;"></div>
+    </div>
+
+    <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Your Condition</h2>
+    <p style="color:var(--text2); font-size:14px; margin-bottom:24px;">Select your respiratory condition to customize
+        your training program</p>
+
+    <form method="POST" id="diagForm">
+        {% csrf_token %}
+        <input type="hidden" name="condition" id="conditionInput">
+        <div class="option-grid">
+            <div class="option-card" onclick="selectCondition(this, 'COPD')">
+                <div class="icon">🫁</div>
+                <div class="name">COPD</div>
+                <div class="desc">Chronic Obstructive Pulmonary Disease</div>
+            </div>
+            <div class="option-card" onclick="selectCondition(this, 'Asthma')">
+                <div class="icon">💨</div>
+                <div class="name">Asthma</div>
+                <div class="desc">Bronchial Asthma</div>
+            </div>
+            <div class="option-card" onclick="selectCondition(this, 'Bronchiectasis')">
+                <div class="icon">🔬</div>
+                <div class="name">Bronchiectasis</div>
+                <div class="desc">Airway widening</div>
+            </div>
+            <div class="option-card" onclick="selectCondition(this, 'ILD')">
+                <div class="icon">🏥</div>
+                <div class="name">ILD</div>
+                <div class="desc">Interstitial Lung Disease</div>
+            </div>
+            <div class="option-card" onclick="selectCondition(this, 'Post-COVID')">
+                <div class="icon">🦠</div>
+                <div class="name">Post-COVID</div>
+                <div class="desc">Post COVID-19 recovery</div>
+            </div>
+            <div class="option-card" onclick="selectCondition(this, 'Other')">
+                <div class="icon">📋</div>
+                <div class="name">Other</div>
+                <div class="desc">Other respiratory condition</div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:24px;">Continue</button>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function selectCondition(el, val) {
+        document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('conditionInput').value = val;
+    }
+</script>
+{% endblock %}

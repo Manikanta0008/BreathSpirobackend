@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>Dashboard</h2>
+    <p>Overview of BreathSpiro application data</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon blue">👥</div>
+        <div class="label">Total Patients</div>
+        <div class="value">{{ total_users }}</div>
+        <div class="change">Registered users</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon green">🏋️</div>
+        <div class="label">Training Sessions</div>
+        <div class="value">{{ total_sessions }}</div>
+        <div class="change">Completed sessions</div>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-icon purple">🔄</div>
+        <div class="label">Total Cycles</div>
+        <div class="value">{{ total_cycles }}</div>
+        <div class="change">Breathing cycles done</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="stat-icon orange">⏱️</div>
+        <div class="label">Avg Session Duration</div>
+        <div class="value">{{ avg_duration }}s</div>
+        <div class="change">Per training session</div>
+    </div>
+</div>
+
+<!-- Recent Patients Table -->
+<div class="table-card">
+    <div class="table-header">
+        <h3>Recent Patients</h3>
+        <a href="{% url 'web-patients' %}" class="btn btn-outline">View All →</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Condition</th>
+                <th>Resp. Rate</th>
+                <th>SpO2</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in recent_users %}
+            <tr>
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar" style="background: {{ user.avatar_color }}">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <div>
+                            <div style="font-weight: 600">{{ user.username }}</div>
+                            <div style="font-size: 12px; color: var(--text-muted)">{{ user.name }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ user.age|default:"-" }}</td>
+                <td>{{ user.gender|default:"-" }}</td>
+                <td>
+                    {% if user.condition %}
+                    <span class="tag tag-blue">{{ user.condition }}</span>
+                    {% else %}-{% endif %}
+                </td>
+                <td>{{ user.respiratory_rate|default:"-" }} bpm</td>
+                <td>
+                    {% if user.spo2_level %}
+                    <span
+                        class="tag {% if user.spo2_level >= 95 %}tag-green{% elif user.spo2_level >= 90 %}tag-orange{% else %}tag-red{% endif %}">
+                        {{ user.spo2_level }}%
+                    </span>
+                    {% else %}-{% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'web-patient-detail' user.id %}" class="btn btn-outline"
+                        style="padding: 6px 12px; font-size: 12px;">View →</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">No patients
+                    registered yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

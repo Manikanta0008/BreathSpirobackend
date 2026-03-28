@@ -1,0 +1,59 @@
+{% extends "patient_base.html" %}
+{% block title %}Dyspnea Score{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <a href="javascript:history.back()" style="color:var(--text); text-decoration:none; font-size:24px;">←</a>
+        <h3 style="font-weight:700;">Dyspnea Score</h3>
+    </div>
+    <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">Step 6 of 7</p>
+    <div style="height:6px; background:var(--border); border-radius:4px; overflow:hidden; margin-bottom:32px;">
+        <div style="height:100%; width:85%; background:var(--blue); border-radius:4px;"></div>
+    </div>
+
+    <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Breathlessness Scale</h2>
+    <p style="color:var(--text2); font-size:14px; margin-bottom:24px;">Rate your breathlessness using the mMRC scale</p>
+
+    <form method="POST" id="dyspneaForm">
+        {% csrf_token %}
+        <input type="hidden" name="dyspnea_score" id="scoreInput">
+        <input type="hidden" name="dyspnea_description" id="descInput">
+        <div class="scale-item" onclick="selectScore(this, 0, 'No breathlessness except on strenuous exercise')">
+            <div class="scale-num">0</div>
+            <div><strong>Grade 0</strong><br><span style="font-size:13px; color:var(--muted);">No breathlessness except
+                    on strenuous exercise</span></div>
+        </div>
+        <div class="scale-item" onclick="selectScore(this, 1, 'Breathless when hurrying or walking up a slight hill')">
+            <div class="scale-num">1</div>
+            <div><strong>Grade 1</strong><br><span style="font-size:13px; color:var(--muted);">Breathless when hurrying
+                    or walking up a slight hill</span></div>
+        </div>
+        <div class="scale-item" onclick="selectScore(this, 2, 'Walks slower than most people, or stops after 15 min')">
+            <div class="scale-num">2</div>
+            <div><strong>Grade 2</strong><br><span style="font-size:13px; color:var(--muted);">Walks slower than most
+                    people, or stops after 15 min</span></div>
+        </div>
+        <div class="scale-item" onclick="selectScore(this, 3, 'Stops after walking 100 meters or a few minutes')">
+            <div class="scale-num">3</div>
+            <div><strong>Grade 3</strong><br><span style="font-size:13px; color:var(--muted);">Stops after walking 100
+                    meters or a few minutes</span></div>
+        </div>
+        <div class="scale-item" onclick="selectScore(this, 4, 'Too breathless to leave the house or dress')">
+            <div class="scale-num">4</div>
+            <div><strong>Grade 4</strong><br><span style="font-size:13px; color:var(--muted);">Too breathless to leave
+                    the house or dress</span></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:20px;">Continue</button>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function selectScore(el, score, desc) {
+        document.querySelectorAll('.scale-item').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('scoreInput').value = score;
+        document.getElementById('descInput').value = desc;
+    }
+</script>
+{% endblock %}

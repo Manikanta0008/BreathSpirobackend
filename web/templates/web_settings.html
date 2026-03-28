@@ -1,0 +1,81 @@
+{% extends "patient_base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <div class="page-header">
+        <h2>Settings</h2>
+        <p>Manage your account</p>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="card" style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
+        <div
+            style="width:56px; height:56px; background:var(--grad-blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; color:white;">
+            {{ username|first|upper|default:"?" }}
+        </div>
+        <div>
+            <div style="font-size:18px; font-weight:700;">{{ user.name|default:username }}</div>
+            <div style="color:var(--muted); font-size:14px;">@{{ username }}</div>
+        </div>
+    </div>
+
+    <!-- Profile Info -->
+    <div class="card">
+        <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">Profile Information</h3>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">Age</div>
+            </div>
+            <span style="color:var(--text2);">{{ user.age|default:"—" }} years</span>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">Gender</div>
+            </div>
+            <span style="color:var(--text2);">{{ user.gender|default:"—" }}</span>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">Height</div>
+            </div>
+            <span style="color:var(--text2);">{{ user.height|default:"—" }} cm</span>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">Weight</div>
+            </div>
+            <span style="color:var(--text2);">{{ user.weight|default:"—" }} kg</span>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">Condition</div>
+            </div>
+            <span style="color:var(--text2);">{{ user.condition|default:"—" }}</span>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+        <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">Account</h3>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">Help & Support</div>
+                <div class="desc">Get help with the app</div>
+            </div>
+            <span style="color:var(--muted);">→</span>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="title">About BreathSpiro</div>
+                <div class="desc">Version 1.0</div>
+            </div>
+            <span style="color:var(--muted);">→</span>
+        </div>
+    </div>
+
+    <a href="{% url 'web-logout' %}" class="btn"
+        style="width:100%; background:rgba(239,68,68,0.1); color:var(--red); border:1px solid rgba(239,68,68,0.3); margin-top:8px;">
+        Logout
+    </a>
+</div>
+{% endblock %}

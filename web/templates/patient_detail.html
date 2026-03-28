@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.username }} - Details{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
+        <a href="{% url 'web-patients' %}" class="btn btn-outline" style="padding: 6px 12px;">← Back</a>
+        <h2>{{ patient.username }}</h2>
+    </div>
+    <p>Full clinical profile and training history</p>
+</div>
+
+<!-- Profile Header -->
+<div
+    style="display: flex; align-items: center; gap: 20px; margin-bottom: 32px; background: var(--bg-card); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border);">
+    <div class="user-avatar" style="background: var(--gradient-blue); width: 64px; height: 64px; font-size: 24px;">
+        {{ patient.username|first|upper }}
+    </div>
+    <div>
+        <div style="font-size: 22px; font-weight: 700;">{{ patient.username }}</div>
+        <div style="color: var(--text-secondary); font-size: 14px;">{{ patient.name }} • {{
+            patient.gender|default:"Gender N/A" }} • Age {{ patient.age|default:"N/A" }}</div>
+        <div style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Device ID: {{
+            patient.device_id|default:"N/A" }} • Registered: {{ patient.created_at|date:"d M Y" }}</div>
+    </div>
+</div>
+
+<!-- Clinical Data Grid -->
+<div class="detail-grid">
+    <!-- Basic Profile -->
+    <div class="detail-section">
+        <h4>👤 Basic Profile</h4>
+        <div class="detail-row">
+            <span class="label">Name</span>
+            <span class="value">{{ patient.name|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Age</span>
+            <span class="value">{{ patient.age|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Gender</span>
+            <span class="value">{{ patient.gender|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Height</span>
+            <span class="value">{{ patient.height|default:"-" }} cm</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Weight</span>
+            <span class="value">{{ patient.weight|default:"-" }} kg</span>
+        </div>
+    </div>
+
+    <!-- Medical Condition -->
+    <div class="detail-section">
+        <h4>🩺 Medical Assessment</h4>
+        <div class="detail-row">
+            <span class="label">Condition</span>
+            <span class="value">
+                {% if patient.condition %}
+                <span class="tag tag-blue">{{ patient.condition }}</span>
+                {% else %}-{% endif %}
+            </span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Smoking Status</span>
+            <span class="value">
+                {% if patient.smoking_status %}
+                <span
+                    class="tag {% if patient.smoking_status == 'Never' %}tag-green{% elif patient.smoking_status == 'Former' %}tag-orange{% else %}tag-red{% endif %}">
+                    {{ patient.smoking_status }}
+                </span>
+                {% else %}-{% endif %}
+            </span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Pack Years</span>
+            <span class="value">{{ patient.pack_years|default:"-" }}</span>
+        </div>
+    </div>
+
+    <!-- Vital Signs -->
+    <div class="detail-section">
+        <h4>💓 Vital Signs</h4>
+        <div class="detail-row">
+            <span class="label">Respiratory Rate</span>
+            <span class="value">{{ patient.respiratory_rate|default:"-" }} bpm</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">SpO2 Level</span>
+            <span class="value">
+                {% if patient.spo2_level %}
+                <span
+                    class="tag {% if patient.spo2_level >= 95 %}tag-green{% elif patient.spo2_level >= 90 %}tag-orange{% else %}tag-red{% endif %}">
+                    {{ patient.spo2_level }}%
+                </span>
+                {% else %}-{% endif %}
+            </span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Dyspnea Score</span>
+            <span class="value">{{ patient.dyspnea_score|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Dyspnea Description</span>
+            <span class="value">{{ patient.dyspnea_description|default:"-" }}</span>
+        </div>
+    </div>
+
+    <!-- Muscle Strength -->
+    <div class="detail-section">
+        <h4>💪 Muscle Strength</h4>
+        <div class="detail-row">
+            <span class="label">Level</span>
+            <span class="value">{{ patient.muscle_strength_level|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Category</span>
+            <span class="value">{{ patient.muscle_strength_title|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">MIP Value</span>
+            <span class="value">{{ patient.mip_value|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">MEP Value</span>
+            <span class="value">{{ patient.mep_value|default:"-" }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Baseline Hold Time</span>
+            <span class="value">{{ patient.baseline_hold_time_sec|default:"-" }} sec</span>
+        </div>
+    </div>
+</div>
+
+<!-- Training Sessions for this patient -->
+<div class="table-card">
+    <div class="table-header">
+        <h3>Training History</h3>
+        <span class="badge">{{ sessions|length }} sessions</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Session</th>
+                <th>Cycles</th>
+                <th>Duration</th>
+                <th>Breaths</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td style="color: var(--text-muted)">#{{ session.id }}</td>
+                <td><span class="tag tag-purple">{{ session.completed_cycles }}/{{ session.total_cycles }}</span></td>
+                <td>{{ session.session_duration_sec }}s</td>
+                <td>{{ session.breath_count }}</td>
+                <td>
+                    {% if session.completed_cycles == session.total_cycles %}
+                    <span class="tag tag-green">✓ Complete</span>
+                    {% else %}
+                    <span class="tag tag-orange">Partial</span>
+                    {% endif %}
+                </td>
+                <td style="color: var(--text-muted); font-size: 13px;">{{ session.created_at|date:"d M Y, h:i A" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No training
+                    sessions for this patient</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

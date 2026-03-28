@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Training Sessions{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>Training Sessions</h2>
+    <p>All breathing exercise sessions recorded from the app</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card green">
+        <div class="stat-icon green">🏋️</div>
+        <div class="label">Total Sessions</div>
+        <div class="value">{{ sessions|length }}</div>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-icon purple">🔄</div>
+        <div class="label">Total Cycles Done</div>
+        <div class="value">{{ total_cycles }}</div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon blue">💨</div>
+        <div class="label">Total Breaths</div>
+        <div class="value">{{ total_breaths }}</div>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="table-header">
+        <h3>All Sessions</h3>
+        <span class="badge">{{ sessions|length }} sessions</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Cycles</th>
+                <th>Duration</th>
+                <th>Breaths</th>
+                <th>Completion</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td style="color: var(--text-muted)">#{{ session.id }}</td>
+                <td>
+                    <div style="font-weight: 600">{{ session.username|default:"Unknown" }}</div>
+                </td>
+                <td>
+                    <span class="tag tag-purple">{{ session.completed_cycles }}/{{ session.total_cycles }}</span>
+                </td>
+                <td>
+                    {% if session.session_duration_sec >= 60 %}
+                    {{ session.session_duration_sec|divisibleby:60 }}m {{ session.session_duration_sec|divisibleby:60
+                    }}s
+                    {% else %}
+                    {{ session.session_duration_sec }}s
+                    {% endif %}
+                </td>
+                <td>{{ session.breath_count }}</td>
+                <td>
+                    {% if session.completed_cycles == session.total_cycles %}
+                    <span class="tag tag-green">✓ Complete</span>
+                    {% else %}
+                    <span class="tag tag-orange">Partial</span>
+                    {% endif %}
+                </td>
+                <td style="color: var(--text-muted); font-size: 13px;">{{ session.created_at|date:"d M Y, h:i A" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">No training
+                    sessions yet. Complete a session in the app!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

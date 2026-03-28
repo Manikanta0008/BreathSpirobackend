@@ -1,0 +1,56 @@
+{% extends "patient_base.html" %}
+{% block title %}Smoking History{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <a href="javascript:history.back()" style="color:var(--text); text-decoration:none; font-size:24px;">←</a>
+        <h3 style="font-weight:700;">Smoking History</h3>
+    </div>
+    <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">Step 3 of 7</p>
+    <div style="height:6px; background:var(--border); border-radius:4px; overflow:hidden; margin-bottom:32px;">
+        <div style="height:100%; width:42%; background:var(--blue); border-radius:4px;"></div>
+    </div>
+
+    <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Smoking Status</h2>
+    <p style="color:var(--text2); font-size:14px; margin-bottom:24px;">Tell us about your smoking habits</p>
+
+    <form method="POST" id="smokingForm">
+        {% csrf_token %}
+        <input type="hidden" name="smoking_status" id="smokingInput">
+        <div class="option-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom:20px;">
+            <div class="option-card" onclick="selectSmoking(this, 'Never')">
+                <div class="icon">🚭</div>
+                <div class="name">Never</div>
+            </div>
+            <div class="option-card" onclick="selectSmoking(this, 'Former')">
+                <div class="icon">✋</div>
+                <div class="name">Former</div>
+            </div>
+            <div class="option-card" onclick="selectSmoking(this, 'Current')">
+                <div class="icon">🚬</div>
+                <div class="name">Current</div>
+            </div>
+        </div>
+        <div class="form-group" id="packYearsGroup" style="display:none;">
+            <label>Pack Years</label>
+            <div
+                style="display:flex; align-items:center; background:var(--bg2); border:1px solid var(--border); border-radius:12px; height:56px; padding:0 16px;">
+                <input type="number" name="pack_years" placeholder="Number of pack years" min="0"
+                    style="flex:1; background:none; border:none; color:var(--text); font-size:16px; outline:none; font-family:'Inter',sans-serif;">
+                <span style="color:var(--text2); font-size:14px;">years</span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function selectSmoking(el, val) {
+        document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('smokingInput').value = val;
+        document.getElementById('packYearsGroup').style.display = (val !== 'Never') ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

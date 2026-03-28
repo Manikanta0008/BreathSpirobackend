@@ -1,0 +1,254 @@
+{% extends "patient_base.html" %}
+{% block title %}Home | BreathSpiro{% endblock %}
+{% block extra_css %}
+/* Home Header */
+.home-header {
+background: linear-gradient(135deg, #1a5276, #2e86c1);
+border-radius: 0 0 28px 28px;
+padding: 48px 24px 40px;
+margin: 0 0 0 0;
+position: relative;
+}
+.home-header .greeting {
+color: rgba(255,255,255,0.7);
+font-size: 14px;
+}
+.home-header .welcome {
+color: white;
+font-size: 24px;
+font-weight: 700;
+margin-top: 4px;
+}
+
+/* Training Card - overlaps header */
+.home-content {
+max-width: 600px;
+margin: -24px auto 0;
+padding: 0 24px 40px;
+position: relative;
+z-index: 1;
+}
+
+.train-card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 20px;
+padding: 24px;
+margin-bottom: 24px;
+box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+}
+.train-card .top {
+display: flex;
+align-items: center;
+gap: 16px;
+margin-bottom: 20px;
+}
+.train-card .icon-box {
+width: 48px; height: 48px;
+background: rgba(59,130,246,0.12);
+border-radius: 12px;
+display: flex; align-items: center; justify-content: center;
+font-size: 24px;
+flex-shrink: 0;
+}
+.train-card h3 {
+font-size: 18px;
+font-weight: 700;
+color: var(--text);
+}
+.train-card .desc {
+color: var(--text2);
+font-size: 14px;
+margin-top: 2px;
+}
+.btn-train {
+width: 100%; height: 56px;
+background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+border: none; border-radius: 14px;
+color: white; font-size: 16px; font-weight: 700;
+font-family: 'Inter', sans-serif;
+cursor: pointer; text-decoration: none;
+display: flex; align-items: center; justify-content: center; gap: 8px;
+transition: all 0.3s;
+}
+.btn-train:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 24px rgba(59,130,246,0.4);
+}
+
+/* Stats Row */
+.stats-row {
+display: flex;
+gap: 12px;
+margin-bottom: 28px;
+}
+.stat-card {
+flex: 1;
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 18px 12px;
+text-align: center;
+transition: all 0.2s;
+}
+.stat-card:hover {
+border-color: var(--blue);
+transform: translateY(-2px);
+}
+.stat-card .ico {
+font-size: 22px;
+margin-bottom: 8px;
+}
+.stat-card .val {
+font-size: 22px;
+font-weight: 800;
+color: var(--text);
+}
+.stat-card .lbl {
+font-size: 12px;
+color: var(--muted);
+margin-top: 2px;
+}
+
+/* Quick Actions */
+.section-title {
+font-size: 16px;
+font-weight: 700;
+margin-bottom: 14px;
+color: var(--text);
+}
+
+.action-card {
+display: flex;
+align-items: center;
+gap: 16px;
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 16px 20px;
+margin-bottom: 10px;
+cursor: pointer;
+transition: all 0.2s;
+text-decoration: none;
+color: var(--text);
+}
+.action-card:hover {
+border-color: var(--blue);
+transform: translateX(4px);
+}
+.action-card .a-icon {
+width: 44px; height: 44px;
+border-radius: 12px;
+display: flex; align-items: center; justify-content: center;
+font-size: 20px;
+flex-shrink: 0;
+}
+.action-card:nth-child(1) .a-icon { background: rgba(59,130,246,0.12); }
+.action-card:nth-child(2) .a-icon { background: rgba(16,185,129,0.12); }
+.action-card:nth-child(3) .a-icon { background: rgba(139,92,246,0.12); }
+.action-card .a-title {
+font-weight: 600;
+font-size: 15px;
+}
+.action-card .a-desc {
+font-size: 12px;
+color: var(--muted);
+margin-top: 2px;
+}
+.action-card .arrow {
+margin-left: auto;
+color: var(--muted);
+font-size: 18px;
+}
+
+/* Tip Box */
+.tip-box {
+display: flex;
+align-items: flex-start;
+gap: 12px;
+background: rgba(251,192,45,0.06);
+border: 1px solid rgba(251,192,45,0.15);
+border-radius: 16px;
+padding: 16px 20px;
+margin-top: 24px;
+}
+.tip-box .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.tip-box p { color: var(--text2); font-size: 14px; line-height: 1.5; }
+{% endblock %}
+
+{% block content %}
+<!-- Blue Gradient Header -->
+<div class="home-header">
+    <div class="greeting">Good morning</div>
+    <div class="welcome">Welcome back, {{ username }}!</div>
+</div>
+
+<div class="home-content">
+    <!-- Training Card (overlaps header) -->
+    <div class="train-card">
+        <div class="top">
+            <div class="icon-box">🫁</div>
+            <div>
+                <h3>Ready to train?</h3>
+                <div class="desc">Start your breathing session</div>
+            </div>
+        </div>
+        <a href="{% url 'web-breathing' %}" class="btn-train">▶ Start Training</a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="ico">📊</div>
+            <div class="val">{{ total_sessions }}</div>
+            <div class="lbl">Sessions</div>
+        </div>
+        <div class="stat-card">
+            <div class="ico">🔄</div>
+            <div class="val">{{ total_cycles }}</div>
+            <div class="lbl">Cycles</div>
+        </div>
+        <div class="stat-card">
+            <div class="ico">🫁</div>
+            <div class="val">{{ avg_volume }}L</div>
+            <div class="lbl">Avg. Volume</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-title">Quick Actions</div>
+
+    <a href="{% url 'web-breathing' %}" class="action-card">
+        <div class="a-icon">⚡</div>
+        <div>
+            <div class="a-title">Quick Session</div>
+            <div class="a-desc">Start a fast breathing session</div>
+        </div>
+        <span class="arrow">→</span>
+    </a>
+
+    <a href="{% url 'web-breathing' %}" class="action-card">
+        <div class="a-icon">🫁</div>
+        <div>
+            <div class="a-title">Guided Training</div>
+            <div class="a-desc">Follow guided breathing exercises</div>
+        </div>
+        <span class="arrow">→</span>
+    </a>
+
+    <a href="{% url 'web-history' %}" class="action-card">
+        <div class="a-icon">📈</div>
+        <div>
+            <div class="a-title">View Progress</div>
+            <div class="a-desc">Track your training history</div>
+        </div>
+        <span class="arrow">→</span>
+    </a>
+
+    <!-- Tip Box -->
+    <div class="tip-box">
+        <span class="tip-icon">💡</span>
+        <p>Tip: Practice diaphragmatic breathing for 5 minutes daily to improve lung capacity.</p>
+    </div>
+</div>
+{% endblock %}

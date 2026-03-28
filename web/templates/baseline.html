@@ -1,0 +1,56 @@
+{% extends "patient_base.html" %}
+{% block title %}Baseline Assessment{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <a href="javascript:history.back()" style="color:var(--text); text-decoration:none; font-size:24px;">←</a>
+        <h3 style="font-weight:700;">Baseline Assessment</h3>
+    </div>
+    <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">Final Step</p>
+    <div style="height:6px; background:var(--green); border-radius:4px; overflow:hidden; margin-bottom:32px;"></div>
+
+    <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Breath Hold Test</h2>
+    <p style="color:var(--text2); font-size:14px; margin-bottom:24px;">Hold your breath as long as you can to measure
+        your baseline</p>
+
+    <div class="card" style="text-align:center;">
+        <div id="holdTimer" style="font-size:72px; font-weight:800; color:var(--blue); margin:24px 0;">0.0</div>
+        <p style="color:var(--muted); margin-bottom:24px;">seconds</p>
+        <button class="btn btn-primary" id="btnHold" onmousedown="startHold()" onmouseup="stopHold()"
+            ontouchstart="startHold()" ontouchend="stopHold()" style="max-width:300px; margin:0 auto;">
+            Press & Hold
+        </button>
+        <p style="color:var(--muted); font-size:13px; margin-top:12px;">Press and hold the button while holding your
+            breath</p>
+        <form method="POST" id="baselineForm" style="margin-top:24px; display:none;">
+            {% csrf_token %}
+            <input type="hidden" name="baseline_hold_time_sec" id="holdInput">
+            <div style="font-size:18px; font-weight:700; color:var(--green); margin-bottom:16px;">
+                Baseline: <span id="resultTime">0</span> seconds
+            </div>
+            <button type="submit" class="btn btn-primary">Complete Setup →</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    let holdInterval, holdTime = 0;
+    function startHold() {
+        holdTime = 0;
+        document.getElementById('btnHold').textContent = 'Holding...';
+        document.getElementById('btnHold').style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        holdInterval = setInterval(() => {
+            holdTime += 0.1;
+            document.getElementById('holdTimer').textContent = holdTime.toFixed(1);
+        }, 100);
+    }
+    function stopHold() {
+        clearInterval(holdInterval);
+        document.getElementById('btnHold').style.display = 'none';
+        document.getElementById('baselineForm').style.display = 'block';
+        document.getElementById('holdInput').value = Math.round(holdTime);
+        document.getElementById('resultTime').textContent = holdTime.toFixed(1);
+    }
+</script>
+{% endblock %}

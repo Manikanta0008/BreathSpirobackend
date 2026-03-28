@@ -1,0 +1,87 @@
+{% extends "patient_base.html" %}
+{% block title %}Performance{% endblock %}
+{% block content %}
+<div class="page page-sm">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:24px;">
+        <a href="{% url 'web-home' %}" style="color:var(--text); text-decoration:none; font-size:24px;">←</a>
+        <h2 style="font-size:22px; font-weight:800;">Performance Analysis</h2>
+    </div>
+
+    <div class="card">
+        <!-- Completion Rate -->
+        <div class="metric">
+            <div class="metric-header">
+                <span class="name">Completion Rate</span>
+                <span class="val">{{ completion_rate }}%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill fill-blue" style="width:{{ completion_rate }}%;"></div>
+            </div>
+            <div class="metric-desc">Cycles completed vs planned</div>
+        </div>
+
+        <!-- Breathing Rate -->
+        <div class="metric">
+            <div class="metric-header">
+                <span class="name">Breathing Efficiency</span>
+                <span class="val">{{ breathing_efficiency }}%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill fill-green" style="width:{{ breathing_efficiency }}%;"></div>
+            </div>
+            <div class="metric-desc">Breaths per cycle consistency</div>
+        </div>
+
+        <!-- Session Duration -->
+        <div class="metric">
+            <div class="metric-header">
+                <span class="name">Duration Score</span>
+                <span class="val">{{ duration_score }}%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill fill-blue" style="width:{{ duration_score }}%;"></div>
+            </div>
+            <div class="metric-desc">Session length vs optimal</div>
+        </div>
+
+        <!-- Volume -->
+        <div class="metric">
+            <div class="metric-header">
+                <span class="name">Volume Achievement</span>
+                <span class="val">{{ volume_score }}%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill fill-green" style="width:{{ volume_score }}%;"></div>
+            </div>
+            <div class="metric-desc">Total volume vs target</div>
+        </div>
+
+        <!-- Overall -->
+        <div class="metric">
+            <div class="metric-header">
+                <span class="name">Overall Score</span>
+                <span class="val" style="font-size:18px;">{{ overall_score }}%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill fill-orange" style="width:{{ overall_score }}%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="card" style="background:rgba(59,130,246,0.06); border-color:rgba(59,130,246,0.15);">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+            <span style="font-size:24px;">💡</span>
+            <div>
+                <h3 style="font-size:15px; font-weight:700; margin-bottom:4px;">Recommendation</h3>
+                <p style="color:var(--text2); font-size:14px;">{{ recommendation }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <a href="{% url 'web-breathing' %}" class="btn btn-primary">Start New Session</a>
+        <a href="{% url 'web-home' %}" class="btn btn-secondary">Home</a>
+    </div>
+</div>
+{% endblock %}

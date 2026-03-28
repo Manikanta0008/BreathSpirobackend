@@ -1,0 +1,221 @@
+{% extends "patient_base.html" %}
+{% block title %}Guided Breathing{% endblock %}
+{% block extra_css %}
+.breath-page { max-width:500px; margin:0 auto; padding:40px 24px; text-align:center; }
+.session-timer { color:var(--muted); font-size:14px; margin-bottom:24px; }
+.cycle-bar-bg { height:8px; background:var(--border); border-radius:4px; margin-bottom:8px; overflow:hidden; }
+.cycle-bar-fill { height:100%; background:var(--grad-blue); border-radius:4px; transition:width 0.5s; }
+.cycle-text { color:var(--text2); font-size:14px; margin-bottom:32px; }
+
+.phase-pill {
+display:inline-block; padding:8px 24px; border-radius:20px;
+font-size:14px; font-weight:700; margin-bottom:24px;
+}
+.phase-inhale { background:rgba(16,185,129,0.15); color:#10b981; }
+.phase-hold { background:rgba(245,158,11,0.15); color:#f59e0b; }
+.phase-exhale { background:rgba(59,130,246,0.15); color:#3b82f6; }
+
+.circle-container { margin:0 auto 32px; position:relative; width:220px; height:220px; }
+.circle-container svg { width:220px; height:220px; transform:rotate(-90deg); }
+.circle-bg { fill:none; stroke:var(--border); stroke-width:8; }
+.circle-progress { fill:none; stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset 1s linear, stroke 0.3s;
+}
+.circle-text {
+position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+font-size:56px; font-weight:800;
+}
+
+.vol-card {
+background:var(--card); border:1px solid var(--border); border-radius:16px;
+padding:20px; margin-bottom:24px; display:flex; justify-content:space-around;
+}
+.vol-item .vol-label { font-size:12px; color:var(--muted); margin-bottom:4px; }
+.vol-item .vol-val { font-size:20px; font-weight:700; }
+
+.controls { display:flex; gap:12px; justify-content:center; margin-top:16px; }
+.ctrl-btn {
+padding:14px 32px; border-radius:12px; font-size:15px; font-weight:700;
+font-family:'Inter',sans-serif; cursor:pointer; border:none; transition:all 0.3s;
+}
+.ctrl-pause { background:rgba(245,158,11,0.15); color:#f59e0b; }
+.ctrl-close { background:rgba(239,68,68,0.15); color:#ef4444; }
+.ctrl-start {
+background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:white;
+width:100%; max-width:300px;
+}
+.ctrl-start:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(59,130,246,0.4); }
+
+/* Done screen */
+.done-screen { display:none; }
+.done-screen .check { font-size:72px; margin-bottom:16px; }
+.done-screen h2 { font-size:24px; font-weight:800; margin-bottom:8px; }
+.done-screen p { color:var(--text2); margin-bottom:32px; }
+{% endblock %}
+
+{% block content %}
+<div class="breath-page">
+    <!-- Pre-session -->
+    <div id="preSession">
+        <h2 style="font-size:24px; font-weight:800; margin-bottom:8px;">Guided Breathing</h2>
+        <p style="color:var(--text2); margin-bottom:32px;">10 cycles: Inhale 4s → Hold 3s → Exhale 5s</p>
+        <div class="card" style="text-align:left; margin-bottom:24px;">
+            <h3 style="font-size:16px; margin-bottom:16px;">Before you start:</h3>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <span style="font-size:20px;">🪑</span>
+                <span style="color:var(--text2); font-size:14px;">Sit comfortably with your back straight</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <span style="font-size:20px;">👃</span>
+                <span style="color:var(--text2); font-size:14px;">Breathe through your nose if possible</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:20px;">🧘</span>
+                <span style="color:var(--text2); font-size:14px;">Relax your shoulders and jaw</span>
+            </div>
+        </div>
+        <button class="ctrl-btn ctrl-start" onclick="startSession()">▶ Start Session</button>
+    </div>
+
+    <!-- Active session -->
+    <div id="activeSession" style="display:none;">
+        <div class="session-timer">Session: <span id="sessionTime">00:00</span></div>
+        <div class="cycle-bar-bg">
+            <div class="cycle-bar-fill" id="cycleBar" style="width:10%;"></div>
+        </div>
+        <div class="cycle-text" id="cycleText">Cycle 1 of 10</div>
+
+        <div class="phase-pill phase-inhale" id="phasePill">Breathe In</div>
+
+        <div class="circle-container">
+            <svg viewBox="0 0 220 220">
+                <circle class="circle-bg" cx="110" cy="110" r="100" />
+                <circle class="circle-progress" id="circleProgress" cx="110" cy="110" r="100" stroke="#10b981"
+                    stroke-dasharray="628" stroke-dashoffset="0" />
+            </svg>
+            <div class="circle-text" id="countdown">4</div>
+        </div>
+
+        <div class="vol-card">
+            <div class="vol-item">
+                <div class="vol-label">Current volume</div>
+                <div class="vol-val" id="curVol">0.0 L</div>
+            </div>
+            <div class="vol-item">
+                <div class="vol-label">Target</div>
+                <div class="vol-val">2.5 L</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="ctrl-btn ctrl-pause" id="pauseBtn" onclick="togglePause()">⏸ Pause</button>
+            <button class="ctrl-btn ctrl-close" onclick="endSession()">✕ Close</button>
+        </div>
+    </div>
+
+    <!-- Done screen -->
+    <div class="done-screen" id="doneScreen">
+        <div class="check">✅</div>
+        <h2>Session Complete!</h2>
+        <p id="doneSummary">Great job finishing your breathing session.</p>
+        <form method="POST" id="saveForm">
+            {% csrf_token %}
+            <input type="hidden" name="session_duration_sec" id="durationInput">
+            <input type="hidden" name="breath_count" id="breathInput">
+            <input type="hidden" name="completed_cycles" id="cyclesInput">
+            <input type="hidden" name="total_cycles" value="10">
+            <button type="submit" class="ctrl-btn ctrl-start">View Summary →</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const INHALE = 4, HOLD = 3, EXHALE = 5, TOTAL_CYCLES = 10, CIRCUM = 628;
+    let cycle = 1, phase = 'inhale', timer = INHALE, sessionSec = 0, breathCount = 0;
+    let paused = false, sessionInterval, phaseInterval;
+
+    function startSession() {
+        document.getElementById('preSession').style.display = 'none';
+        document.getElementById('activeSession').style.display = 'block';
+        sessionInterval = setInterval(() => { if (!paused) { sessionSec++; updateSessionTime(); } }, 1000);
+        startPhase();
+    }
+
+    function updateSessionTime() {
+        let m = Math.floor(sessionSec / 60), s = sessionSec % 60;
+        document.getElementById('sessionTime').textContent =
+            String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function startPhase() {
+        if (phase === 'inhale') { timer = INHALE; setPhaseUI('Breathe In', 'phase-inhale', '#10b981'); }
+        else if (phase === 'hold') { timer = HOLD; setPhaseUI('Hold', 'phase-hold', '#f59e0b'); }
+        else { timer = EXHALE; setPhaseUI('Breathe Out', 'phase-exhale', '#3b82f6'); }
+
+        updateCircle();
+        document.getElementById('countdown').textContent = timer;
+
+        phaseInterval = setInterval(() => {
+            if (paused) return;
+            timer--;
+            if (timer <= 0) {
+                clearInterval(phaseInterval);
+                nextPhase();
+            } else {
+                document.getElementById('countdown').textContent = timer;
+                updateCircle();
+            }
+        }, 1000);
+    }
+
+    function setPhaseUI(text, cls, color) {
+        let pill = document.getElementById('phasePill');
+        pill.textContent = text;
+        pill.className = 'phase-pill ' + cls;
+        document.getElementById('circleProgress').setAttribute('stroke', color);
+    }
+
+    function updateCircle() {
+        let max = phase === 'inhale' ? INHALE : phase === 'hold' ? HOLD : EXHALE;
+        let pct = timer / max;
+        document.getElementById('circleProgress').setAttribute('stroke-dashoffset', CIRCUM * (1 - pct));
+    }
+
+    function nextPhase() {
+        if (phase === 'inhale') { phase = 'hold'; breathCount++; }
+        else if (phase === 'hold') { phase = 'exhale'; }
+        else {
+            cycle++;
+            if (cycle > TOTAL_CYCLES) { finishSession(); return; }
+            phase = 'inhale';
+        }
+        document.getElementById('cycleText').textContent = 'Cycle ' + Math.min(cycle, TOTAL_CYCLES) + ' of ' + TOTAL_CYCLES;
+        document.getElementById('cycleBar').style.width = (cycle / TOTAL_CYCLES * 100) + '%';
+        let vol = (breathCount * 0.25).toFixed(1);
+        document.getElementById('curVol').textContent = vol + ' L';
+        startPhase();
+    }
+
+    function togglePause() {
+        paused = !paused;
+        document.getElementById('pauseBtn').textContent = paused ? '▶ Resume' : '⏸ Pause';
+    }
+
+    function endSession() { finishSession(); }
+
+    function finishSession() {
+        clearInterval(sessionInterval);
+        clearInterval(phaseInterval);
+        document.getElementById('activeSession').style.display = 'none';
+        document.getElementById('doneScreen').style.display = 'block';
+        document.getElementById('durationInput').value = sessionSec;
+        document.getElementById('breathInput').value = breathCount;
+        document.getElementById('cyclesInput').value = Math.min(cycle, TOTAL_CYCLES);
+        let vol = (breathCount * 0.25).toFixed(1);
+        document.getElementById('doneSummary').textContent =
+            cycle >= TOTAL_CYCLES ? 'Great job! You completed all ' + TOTAL_CYCLES + ' cycles with ' + vol + 'L total volume.'
+                : 'You completed ' + (cycle - 1) + ' of ' + TOTAL_CYCLES + ' cycles.';
+    }
+</script>
+{% endblock %}

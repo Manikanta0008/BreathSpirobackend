@@ -1,0 +1,37 @@
+{% extends "patient_base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<div class="page">
+    <div class="page-header">
+        <h2>Recent Sessions</h2>
+        <p>Your breathing training history</p>
+    </div>
+
+    {% if sessions %}
+    <div class="session-list">
+        {% for s in sessions %}
+        <div class="session-item">
+            <div class="session-info">
+                <div class="date">{{ s.created_at|date:"M d, Y — h:i A" }}</div>
+                <div class="meta">{{ s.completed_cycles }}/{{ s.total_cycles }} cycles · {{ s.breath_count }} breaths ·
+                    {{ s.session_duration_sec }}s</div>
+            </div>
+            <span
+                class="session-badge {% if s.completed_cycles >= s.total_cycles %}badge-green{% else %}badge-orange{% endif %}">
+                {% if s.completed_cycles >= s.total_cycles %}Complete{% else %}Partial{% endif %}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center; padding:48px 24px;">
+        <div style="font-size:48px; margin-bottom:16px;">📋</div>
+        <h3 style="margin-bottom:8px;">No sessions yet</h3>
+        <p style="color:var(--text2); margin-bottom:24px;">Start your first breathing session to see your history here
+        </p>
+        <a href="{% url 'web-breathing' %}" class="btn btn-primary" style="max-width:250px; margin:0 auto;">Start
+            Training</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

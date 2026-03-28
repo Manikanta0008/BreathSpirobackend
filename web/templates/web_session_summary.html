@@ -1,0 +1,50 @@
+{% extends "patient_base.html" %}
+{% block title %}Session Summary{% endblock %}
+{% block content %}
+<div class="page page-sm" style="text-align:center;">
+    <div style="font-size:64px; margin-bottom:16px;">🎉</div>
+    <h2 style="font-size:24px; font-weight:800; margin-bottom:8px;">Session Complete</h2>
+    <p style="color:var(--text2); margin-bottom:32px;">Here's how you did</p>
+
+    <!-- Score -->
+    <div class="card" style="margin-bottom:24px;">
+        <div style="font-size:14px; color:var(--muted); margin-bottom:8px;">Session Score</div>
+        <div
+            style="font-size:48px; font-weight:800; color:{% if score >= 80 %}var(--green){% elif score >= 50 %}var(--orange){% else %}var(--red){% endif %};">
+            {{ score }}%
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats">
+        <div class="stat">
+            <div class="ico">🔄</div>
+            <div class="val">{{ completed_cycles }}/{{ total_cycles }}</div>
+            <div class="lbl">Cycles</div>
+        </div>
+        <div class="stat">
+            <div class="ico">⏱️</div>
+            <div class="val">{{ duration_min }}m {{ duration_sec }}s</div>
+            <div class="lbl">Duration</div>
+        </div>
+        <div class="stat">
+            <div class="ico">💨</div>
+            <div class="val">{{ breath_count }}</div>
+            <div class="lbl">Breaths</div>
+        </div>
+        <div class="stat">
+            <div class="ico">🫁</div>
+            <div class="val">{{ volume }}L</div>
+            <div class="lbl">Volume</div>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <a href="{% url 'web-performance' %}" class="btn btn-primary">View Performance →</a>
+    </div>
+    <div style="margin-top:12px;">
+        <a href="{% url 'web-home' %}" style="color:var(--text2); font-size:14px; text-decoration:none;">← Back to
+            Home</a>
+    </div>
+</div>
+{% endblock %}

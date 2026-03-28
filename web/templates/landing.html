@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreathSpiro – Digital Respiratory Muscle Training & Incentive Spirometer</title>
+    <meta name="description"
+        content="BreathSpiro is a mobile app for guided respiratory muscle training and incentive spirometry. Improve your lung capacity with guided breathing exercises.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            background: #ffffff;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-dark {
+            background: #f0f7ff;
+        }
+
+        .section-blue {
+            background: linear-gradient(135deg, #0f4c81, #1a73c7);
+            color: white;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 17px;
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+
+        .section-blue .section-subtitle {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 16px 0;
+            transition: all 0.3s;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #0f4c81;
+        }
+
+        .nav-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1a73c7, #2e9bda);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .nav-logo span {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #f0f7ff;
+            color: #0f4c81;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #1a73c7, #0f4c81) !important;
+            color: white !important;
+            font-weight: 600 !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(26, 115, 199, 0.3);
+        }
+
+        .nav-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #1e293b;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 140px 0 80px;
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f7ff 40%, #ffffff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, #ffffff);
+        }
+
+        .hero .container {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(26, 115, 199, 0.08);
+            color: #1a73c7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 900;
+            color: #0f4c81;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #1a73c7, #2e9bda);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .tagline {
+            font-size: 18px;
+            color: #1a73c7;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a73c7, #0f4c81);
+            color: white;
+            box-shadow: 0 4px 16px rgba(26, 115, 199, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 115, 199, 0.35);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #0f4c81;
+            border: 2px solid #c7ddf0;
+        }
+
+        .btn-outline:hover {
+            border-color: #1a73c7;
+            background: #f0f7ff;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lung-animation {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(26, 115, 199, 0.08), rgba(46, 155, 218, 0.15));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .lung-animation::before {
+            content: '';
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            border: 2px dashed rgba(26, 115, 199, 0.15);
+            animation: spin 20s linear infinite;
+        }
+
+        .lung-animation .icon {
+            font-size: 120px;
+            filter: drop-shadow(0 8px 24px rgba(26, 115, 199, 0.2));
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== ABOUT ===== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .about-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .about-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+            border-color: #c7ddf0;
+        }
+
+        .about-card .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .about-card:nth-child(1) .card-icon {
+            background: rgba(26, 115, 199, 0.1);
+        }
+
+        .about-card:nth-child(2) .card-icon {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .about-card:nth-child(3) .card-icon {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .about-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0f4c81;
+        }
+
+        .about-card p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        /* ===== FEATURES ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #1a73c7, #2e9bda);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card .f-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* ===== CLINICAL PARAMETERS ===== */
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            display: flex;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(4px);
+        }
+
+        .param-card .p-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .param-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .param-card p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 12%;
+            right: 12%;
+            height: 3px;
+            background: linear-gradient(to right, #c7ddf0, #1a73c7, #c7ddf0);
+            z-index: 0;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-num {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a73c7, #2e9bda);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 16px rgba(26, 115, 199, 0.25);
+        }
+
+        .step-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0f4c81;
+        }
+
+        .step-card p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* ===== APP SCREENS ===== */
+        .screens-scroll {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .screen-mockup {
+            width: 180px;
+            height: 320px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #0a0e17, #111827);
+            border: 3px solid #2a3040;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .screen-mockup:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .screen-mockup .s-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .screen-mockup .s-title {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .screen-mockup .s-desc {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        /* ===== BENEFITS ===== */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .benefit-card .b-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: linear-gradient(135deg, #e8f4fd, #d1ecff);
+        }
+
+        .benefit-card h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f4c81;
+            margin-bottom: 6px;
+        }
+
+        .benefit-card p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* ===== DISCLAIMER ===== */
+        .disclaimer-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .disclaimer-box .d-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .disclaimer-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .disclaimer-box p {
+            font-size: 15px;
+            color: #78716c;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 48px 0 32px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand .f-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand .f-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1a73c7, #2e9bda);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .footer-brand .f-logo span {
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.8;
+            max-width: 320px;
+        }
+
+        .footer h4 {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer ul {
+            list-style: none;
+        }
+
+        .footer ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer ul a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer ul a:hover {
+            color: #1a73c7;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #1e293b;
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width:768px) {
+            .hero .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                max-width: 100%;
+            }
+
+            .hero-btns {
+                justify-content: center;
+            }
+
+            .lung-animation {
+                width: 220px;
+                height: 220px;
+            }
+
+            .lung-animation .icon {
+                font-size: 80px;
+            }
+
+            .lung-animation::before {
+                width: 260px;
+                height: 260px;
+            }
+
+            .about-grid,
+            .features-grid,
+            .params-grid,
+            .steps-grid,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid::before {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-menu-btn {
+                display: block;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .screens-scroll {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-bottom: 16px;
+            }
+        }
+
+        @media (min-width:769px) and (max-width:1024px) {
+
+            .about-grid,
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-grid::before {
+                display: none;
+            }
+
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">🫁</div>
+                <span>BreathSpiro</span>
+            </a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#parameters">Parameters</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#benefits">Benefits</a>
+                <a href="{% url 'web-login' %}" class="btn nav-cta">Open App →</a>
+            </div>
+            <button class="nav-menu-btn"
+                onclick="document.querySelector('.nav-links').classList.toggle('show')">☰</button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-text">
+                <div class="hero-badge">🫁 Healthcare Innovation</div>
+                <h1>Breath<span class="highlight">Spiro</span></h1>
+                <div class="tagline">Digital Respiratory Muscle Training & Incentive Spirometer</div>
+                <p>Train your breathing muscles with guided inhale-hold-exhale exercises. Track your respiratory health,
+                    improve lung capacity, and monitor your progress — all from your smartphone.</p>
+                <div class="hero-btns">
+                    <a href="{% url 'web-login' %}" class="btn btn-primary">▶ Open Web App</a>
+                    <a href="#about" class="btn btn-outline">Learn More ↓</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="lung-animation">
+                    <div class="icon">🫁</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-title">About the App</div>
+            <div class="section-subtitle">Understanding respiratory muscle training and how BreathSpiro helps you
+                breathe better</div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="card-icon">💪</div>
+                    <h3>Respiratory Muscle Training</h3>
+                    <p>Respiratory muscle training (RMT) strengthens the diaphragm and intercostal muscles through
+                        targeted breathing exercises, improving ventilation and reducing breathlessness.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon">🌬️</div>
+                    <h3>Incentive Spirometry</h3>
+                    <p>An incentive spirometer encourages sustained maximal inspiration, helping expand the lungs fully
+                        and preventing post-surgical or post-illness complications like atelectasis.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon">📱</div>
+                    <h3>Digital Training at Home</h3>
+                    <p>BreathSpiro brings professional respiratory training to your phone. Practice guided breathing
+                        exercises at home, track your progress, and improve your lung capacity over time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="section section-dark" id="features">
+        <div class="container">
+            <div class="section-title">App Features</div>
+            <div class="section-subtitle">Everything you need for effective respiratory muscle training</div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="f-icon">🧘</div>
+                    <h3>Guided Breathing Training</h3>
+                    <p>Inhale (4s) → Hold (3s) → Exhale (5s) with visual cues and a circular timer animation</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">🫁</div>
+                    <h3>Lung Expansion Animation</h3>
+                    <p>Real-time visual feedback showing lung expansion during each breathing phase</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">🔄</div>
+                    <h3>Breathing Cycle Counter</h3>
+                    <p>Track completed cycles with a progress bar. Default: 10 cycles per session</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">📊</div>
+                    <h3>Baseline Assessment</h3>
+                    <p>Measure your initial respiratory capacity with breath-hold timing and clinical parameters</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">⚠️</div>
+                    <h3>Safety Alerts</h3>
+                    <p>Real-time monitoring with alerts if SpO₂ drops below safe levels during training</p>
+                </div>
+                <div class="feature-card">
+                    <div class="f-icon">📈</div>
+                    <h3>Progress Tracking</h3>
+                    <p>View your training history, session scores, and performance analysis over time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CLINICAL PARAMETERS ===== -->
+    <section class="section section-blue" id="parameters">
+        <div class="container">
+            <div class="section-title" style="color:white;">Clinical Parameters</div>
+            <div class="section-subtitle">Comprehensive respiratory health monitoring built into the app</div>
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="p-icon">💨</div>
+                    <div>
+                        <h3>Respiratory Rate</h3>
+                        <p>Monitor breaths per minute (normal: 12-20 BPM for adults)</p>
+                    </div>
+                </div>
+                <div class="param-card">
+                    <div class="p-icon">❤️</div>
+                    <div>
+                        <h3>SpO₂ Monitoring</h3>
+                        <p>Record oxygen saturation levels (normal: 95-100%)</p>
+                    </div>
+                </div>
+                <div class="param-card">
+                    <div class="p-icon">📋</div>
+                    <div>
+                        <h3>Borg Dyspnea Scale (mMRC)</h3>
+                        <p>Standardized 0-4 scale measuring breathlessness severity</p>
+                    </div>
+                </div>
+                <div class="param-card">
+                    <div class="p-icon">🚬</div>
+                    <div>
+                        <h3>Smoking History</h3>
+                        <p>Track smoking status and pack-years for risk assessment</p>
+                    </div>
+                </div>
+                <div class="param-card">
+                    <div class="p-icon">💪</div>
+                    <div>
+                        <h3>MIP & MEP (Muscle Strength)</h3>
+                        <p>Maximal Inspiratory/Expiratory Pressure in cmH₂O for strength assessment</p>
+                    </div>
+                </div>
+                <div class="param-card">
+                    <div class="p-icon">⏱️</div>
+                    <div>
+                        <h3>Training Session Control</h3>
+                        <p>Configurable cycles, duration tracking, and breath volume calculation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-title">How It Works</div>
+            <div class="section-subtitle">Start improving your respiratory health in 4 simple steps</div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <h3>Enter Baseline Info</h3>
+                    <p>Complete your profile with age, height, weight, and respiratory parameters</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <h3>Start Guided Training</h3>
+                    <p>Begin a breathing session with visual cues and timer guidance</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <h3>Follow the Animation</h3>
+                    <p>Inhale, hold, and exhale following the circular breathing animation</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">4</div>
+                    <h3>Track Your Progress</h3>
+                    <p>View session scores, performance analysis, and improvement over time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== APP SCREENS ===== -->
+    <section class="section section-dark" id="screens">
+        <div class="container">
+            <div class="section-title">App Screens Preview</div>
+            <div class="section-subtitle">A glimpse into the BreathSpiro mobile experience</div>
+            <div class="screens-scroll">
+                <div class="screen-mockup">
+                    <div class="s-icon">🔐</div>
+                    <div class="s-title">Login</div>
+                    <div class="s-desc">Secure access</div>
+                </div>
+                <div class="screen-mockup">
+                    <div class="s-icon">👤</div>
+                    <div class="s-title">Profile Setup</div>
+                    <div class="s-desc">7-step wizard</div>
+                </div>
+                <div class="screen-mockup">
+                    <div class="s-icon">🏠</div>
+                    <div class="s-title">Home Dashboard</div>
+                    <div class="s-desc">Stats & quick actions</div>
+                </div>
+                <div class="screen-mockup">
+                    <div class="s-icon">🫁</div>
+                    <div class="s-title">Guided Breathing</div>
+                    <div class="s-desc">Inhale-Hold-Exhale</div>
+                </div>
+                <div class="screen-mockup">
+                    <div class="s-icon">📊</div>
+                    <div class="s-title">Performance</div>
+                    <div class="s-desc">5 metrics analysis</div>
+                </div>
+                <div class="screen-mockup">
+                    <div class="s-icon">📋</div>
+                    <div class="s-title">History</div>
+                    <div class="s-desc">All past sessions</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BENEFITS ===== -->
+    <section class="section" id="benefits">
+        <div class="container">
+            <div class="section-title">Benefits</div>
+            <div class="section-subtitle">Why respiratory muscle training matters for your health</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="b-icon">🫁</div>
+                    <h3>Improves Lung Capacity</h3>
+                    <p>Strengthens respiratory muscles for deeper, more efficient breathing</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="b-icon">💪</div>
+                    <h3>Muscle Training</h3>
+                    <p>Targets diaphragm and intercostal muscles through structured exercises</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="b-icon">🏥</div>
+                    <h3>Rehabilitation Support</h3>
+                    <p>Aids recovery after COVID-19, COPD, surgery, and other respiratory conditions</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="b-icon">🏠</div>
+                    <h3>Easy Home Use</h3>
+                    <p>No equipment needed — train anywhere with just your smartphone</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SAFETY DISCLAIMER ===== -->
+    <section class="section section-dark">
+        <div class="container">
+            <div class="disclaimer-box">
+                <div class="d-icon">⚠️</div>
+                <div>
+                    <h3>Safety Disclaimer</h3>
+                    <p>BreathSpiro is designed for respiratory muscle training and rehabilitation purposes only. It does
+                        not replace professional medical diagnosis, treatment, or clinical spirometry. Always consult
+                        your healthcare provider before beginning any respiratory training program, especially if you
+                        have existing respiratory conditions. Stop training immediately if you experience dizziness,
+                        chest pain, or severe breathlessness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="f-logo">
+                        <div class="f-logo-icon">🫁</div>
+                        <span>BreathSpiro</span>
+                    </div>
+                    <p>Digital Respiratory Muscle Training & Incentive Spirometer — helping users improve their lung
+                        health through guided breathing exercises and clinical monitoring.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#parameters">Clinical Parameters</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Project Information</h4>
+                    <ul>
+                        <li><a href="#">Developer: SIMATS University</a></li>
+                        <li><a href="#">Platform: Android + Web</a></li>
+                        <li><a href="#">Backend: Django + MySQL</a></li>
+                        <li><a href="#">Privacy: Data stored locally</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 BreathSpiro. All rights reserved.</span>
+                <span>Built for academic research and rehabilitation purposes.</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
